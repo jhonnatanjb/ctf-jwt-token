@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  webserver:
+    container_name: jwt-150-ctf
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile    
+    ports:
+      - 30666:30666
