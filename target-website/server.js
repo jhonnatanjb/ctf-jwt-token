@@ -1,4 +1,4 @@
-var port = 8080;
+var port = 30666;
 var http = require('http');          // core node.js http (no frameworks)
 var url = require('url');            // core node.js url (no frameworks)
 var app  = require('./lib/helpers'); // auth, token verification & render helpers
@@ -15,6 +15,9 @@ http.createServer(function (req, res) {
   else if( path === '/auth')    { app.handler(req, res);            } // authenticator
   else if( path === '/private') { app.validate(req, res, app.done); } // private content
   else if( path === '/logout')  { app.logout(req, res, app.done);   } // end session
+  else if(path.startsWith('/public/images')&& ((path.endsWith('.png') || path.endsWith('.jpg')))) {
+    app.serveImage(req,res);
+  }
   else                          { app.notFound(res);                } // 404 error
 }).listen(port);
 

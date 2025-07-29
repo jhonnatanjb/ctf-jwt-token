@@ -76,7 +76,7 @@ function authSuccess(req, res, role) {
 }
 
 // lookup person in "database"
-var u = { un: 'longz', pw: 'gogogo', role: 'user' };
+var u = { un: 'shigeru', pw: 'miyamoto', role: 'user' };
 
 // handle authorisation requests
 function authHandler(req, res){
@@ -192,6 +192,37 @@ function logout(req, res, callback) {
   }
 }
 
+function serveImage(req, res) {
+  const imagePath = path.join(__dirname, '..', req.url); // Assuming images are in 'public/images'
+  const ext = path.extname(imagePath).toLowerCase();
+
+  // Determine the content type based on the file extension
+  let contentType;
+  switch (ext) {
+    case '.png':
+      contentType = 'image/png';
+      break;
+    case '.jpg':
+      contentType = 'image/jpeg';
+      break;    
+    // Add more image types as needed
+    default:
+      // If it's not a recognized image type, respond with 404
+      notFound(res);
+      return;
+  }
+
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(`Error serving image: ${err}`);
+      notFound(res); // Image not found or other error
+    } else {
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    }
+  });
+}
+
 
 module.exports = {
   fail : authFail,
@@ -204,5 +235,6 @@ module.exports = {
   validate : validate,
   verify : verify,
   view : loadView,
-  generateAndStoreToken: generateAndStoreToken
+  generateAndStoreToken: generateAndStoreToken,
+  serveImage:serveImage
 }
